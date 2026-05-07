@@ -27,8 +27,18 @@ public class TransactionPopulator {
 		userRepository.save(recipient);
 		return new TransactionRecord(sender, recipient, amount);
 	}
+	
+	public TransactionRecord create(Transaction transaction, float incentive) {
+		TransactionRecord transactionRecord = create(transaction);
+		if( transactionRecord == null) return null;
+		UserRecord recipient = transactionRecord.getRecipient();
+		transactionRecord.setIncentive(incentive);
+		recipient.setBalance(incentive + recipient.getBalance());
+		userRepository.save(recipient);
+		return transactionRecord;
+	}
 		
 	public void save(TransactionRecord transactionRecord) {
-		TransactionRecord result = transactionRepository.save(transactionRecord);
+		transactionRepository.save(transactionRecord);
 	}
 }
